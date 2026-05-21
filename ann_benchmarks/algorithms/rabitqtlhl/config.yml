@@ -1,0 +1,71 @@
+float:
+  euclidean:
+    - base_args: ["@metric"]
+      constructor: RabitQTLHL
+      disabled: false
+      docker_tag: ann-benchmarks-rabitqtlhl
+      module: ann_benchmarks.algorithms.rabitqtlhl
+      name: rabitqtlhl
+
+      run_groups:
+        sift1m_main:
+          args:
+            - [
+                {
+                  nCenters: 2048,
+                  graphDegree: 48,
+                  graphBuildIntra: 384,
+                  graphBuildCross: 256,
+                  graphBuildCenterNeighbors: 8,
+                  centerLeafMinSize: 16,
+                  centerScanKeep: 32,
+                  exactCenterKeep: 6,
+                  centerRefineNeighborScan: 768,
+                  centerTopNScan: 8000,
+                  centerTopNCoarseKeep: 64,
+                  initKeep: 32,
+                  graphSearchUseRaBitQ: false,
+                  useMicroEntry: true,
+                  microEntryBits: 6,
+                  microEntryBucketTake: 8,
+                  microEntryProbe: 8,
+                  microEntryCenterKeep: 1,
+                  bridgeEdges: true,
+                  bridgeCenterNeighbors: 2,
+                  bridgePointsPerCenter: 2,
+                  bridgeCandidateScan: 64,
+                  queryAdjacencyOrder: true,
+                  reorderByCenter: true,
+                  randomState: 42
+                }
+              ]
+          # query args: [efSearch, neighborCap, rerank]
+          query_args:
+            - [[48, 24, 64], [52, 24, 64], [56, 24, 64], [64, 22, 64], [64, 24, 64]]
+
+        speed_sweep:
+          args:
+            - [
+                {
+                  nCenters: 2048,
+                  graphDegree: 48,
+                  centerRefineNeighborScan: 768,
+                  centerTopNScan: 8000,
+                  centerTopNCoarseKeep: 64,
+                  graphSearchUseRaBitQ: false,
+                  useMicroEntry: true,
+                  microEntryBits: 6,
+                  microEntryBucketTake: 8,
+                  microEntryProbe: 8,
+                  microEntryCenterKeep: 1,
+                  bridgeEdges: true,
+                  bridgeCenterNeighbors: 2,
+                  bridgePointsPerCenter: 2,
+                  bridgeCandidateScan: 64,
+                  queryAdjacencyOrder: true,
+                  reorderByCenter: true,
+                  randomState: 42
+                }
+              ]
+          query_args:
+            - [[32, 24, 64], [40, 24, 64], [48, 24, 64], [56, 24, 64]]
