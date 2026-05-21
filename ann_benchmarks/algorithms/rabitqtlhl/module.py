@@ -68,7 +68,10 @@ def _load_library() -> ctypes.CDLL:
     here = Path(__file__).resolve().parent
     if os.name == "nt" and hasattr(os, "add_dll_directory"):
         os.add_dll_directory(str(here))
+    env_path = os.environ.get("RABITQTLHL_LIB")
     candidates = [
+        Path(env_path) if env_path else None,
+        Path("/opt/rabitqtlhl/librabitqtlhl.so"),
         here / "rabitqtlhl.dll",
         here / "librabitqtlhl.so",
         here / "librabitqtlhl.dylib",
@@ -76,11 +79,11 @@ def _load_library() -> ctypes.CDLL:
         here / "Debug" / "rabitqtlhl.dll",
     ]
     for path in candidates:
-        if path.exists():
+        if path is not None and path.exists():
             lib = ctypes.CDLL(str(path))
             break
     else:
-        names = ", ".join(str(path) for path in candidates)
+        names = ", ".join(str(path) for path in candidates if path is not None)
         raise ImportError(
             "Could not find the RaBitQ-TLHL shared library. "
             f"Expected one of: {names}. Build it with CMake first."

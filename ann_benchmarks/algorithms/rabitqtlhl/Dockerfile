@@ -14,15 +14,14 @@ COPY ann_benchmarks /home/app/ann_benchmarks
 
 ENV PYTHONPATH=/home/app
 ENV KMP_DUPLICATE_LIB_OK=TRUE
+ENV RABITQTLHL_LIB=/opt/rabitqtlhl/librabitqtlhl.so
 
-# Put this package at /opt/rabitqtlhl before docker build, or override with your own copy step.
-COPY package/ann_benchmarks_rabitqtlhl /opt/rabitqtlhl
-
-WORKDIR /opt/rabitqtlhl
+WORKDIR /home/app/ann_benchmarks/algorithms/rabitqtlhl
 RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release && \
     cmake --build build --config Release -j
+RUN mkdir -p /opt/rabitqtlhl && \
+    cp /home/app/ann_benchmarks/algorithms/rabitqtlhl/librabitqtlhl.so /opt/rabitqtlhl/librabitqtlhl.so
 
-RUN cp -r ann_benchmarks/algorithms/rabitqtlhl /home/app/ann_benchmarks/algorithms/
 RUN python3 -c "from ann_benchmarks.algorithms.rabitqtlhl import RabitQTLHL; print('rabitqtlhl import ok')"
 RUN test -f /tmp/run_algorithm.py
 
